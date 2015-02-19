@@ -3,7 +3,8 @@
 \alias{CAPMRes}
 \title{CAPM results}
 \usage{
-CAPMRes(df, rm, siglevel = 0.05, Newey = TRUE)
+CAPMRes(df, rm, siglevel = 0.05, Newey = TRUE, alpha_Null = 0,
+  beta_Null = 1)
 }
 \arguments{
 \item{df}{data.frame With mutual fund returns and market benchmark}

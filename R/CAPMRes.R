@@ -3,7 +3,7 @@
 #' @param rm character Name of the market benchmark
 #' @return A data.frame with CAPM results
 #' @export
-CAPMRes <- function(df, rm, siglevel = 0.05, Newey = TRUE){
+CAPMRes <- function(df, rm, siglevel = 0.05, Newey = TRUE, alpha_Null = 0, beta_Null = 1){
   funds <- str_detect(colnames(df), "Aktier")  %>%  which
   res <- lapply(funds, function(i){
     fm <- as.formula(paste(paste(colnames(df)[i]), paste("1", rm, sep = "+"), sep=" ~ "))
@@ -17,6 +17,10 @@ CAPMRes <- function(df, rm, siglevel = 0.05, Newey = TRUE){
                       "std_beta" = ifelse(Newey == TRUE, NW_std[2,2], sumlm$coefficients[2,2]),
                       "t_alpha" = ifelse(Newey == TRUE, NW_std[1,3], sumlm$coefficients[1,3]),
                       "t_beta" = ifelse(Newey == TRUE, NW_std[2,3], sumlm$coefficients[2,3]),
+                      "t_alpha_calc" = ifelse(Newey == TRUE, (sumlm$coefficients[1,1]-alpha_Null)/NW_std[1,2]
+                                              , (sumlm$coefficients[1,1]-alpha_Null)/sumlm$coefficients[1,2]),
+                      "t_beta_calc" = ifelse(Newey == TRUE, (sumlm$coefficients[2,1]-beta_Null)/NW_std[2,2]
+                                              , (sumlm$coefficients[2,1]-beta_Null)/sumlm$coefficients[2,2]),
                       "p_alpha" = ifelse(Newey == TRUE, NW_std[1,4], sumlm$coefficients[1,4]),
                       "p_beta" = ifelse(Newey == TRUE, NW_std[2,4], sumlm$coefficients[2,4]),
                       "R2_adj" = sumlm$adj.r.squared,
